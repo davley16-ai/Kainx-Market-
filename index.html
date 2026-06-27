@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kainx Market — Buy and sell, made for Africa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --indigo:#16323D;
+    --indigo-light:#1F4654;
+    --terracotta:#E2682E;
+    --terracotta-dark:#C2531F;
+    --gold:#F0B23E;
+    --cream:#FAF5EB;
+    --cream-deep:#F1E7D4;
+    --ink:#21201C;
+    --green:#3D7A5E;
+    --line:rgba(33,32,28,0.12);
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Manrope',sans-serif;
+    font-size:16px;
+    line-height:1.5;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  .mono{font-family:'JetBrains Mono',monospace;}
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px;}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;}
+
+  /* pattern signature - woven strip */
+  .weave{
+    height:8px;
+    background:repeating-linear-gradient(45deg,
+      var(--terracotta) 0 10px,
+      var(--gold) 10px 20px,
+      var(--green) 20px 30px,
+      var(--indigo) 30px 40px);
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    background:var(--indigo);
+    color:var(--cream);
+    position:sticky;top:0;z-index:50;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+  .nav-row{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 0;gap:24px;
+  }
+  .logo{
+    display:flex;align-items:center;gap:10px;font-size:22px;font-weight:700;
+    font-family:'Fraunces',serif;color:var(--cream);
+  }
+  .logo .mark{
+    width:34px;height:34px;border-radius:8px;
+    background:linear-gradient(135deg,var(--terracotta),var(--gold));
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Fraunces',serif;font-weight:700;color:var(--indigo);font-size:18px;
+    flex-shrink:0;
+  }
+  nav.links{display:flex;gap:28px;font-weight:600;font-size:14.5px;}
+  nav.links a{opacity:.82;transition:opacity .15s;}
+  nav.links a:hover{opacity:1;}
+  .nav-actions{display:flex;align-items:center;gap:14px;}
+  .search-bar{
+    display:flex;align-items:center;background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.16);border-radius:999px;
+    padding:9px 16px;gap:8px;min-width:280px;
+  }
+  .search-bar input{
+    background:none;border:none;outline:none;color:var(--cream);
+    font-family:'Manrope',sans-serif;font-size:14px;width:100%;
+  }
+  .search-bar input::placeholder{color:rgba(250,245,235,0.55);}
+  .icon-btn{
+    width:38px;height:38px;border-radius:999px;display:flex;align-items:center;justify-content:center;
+    background:rgba(255,255,255,0.08);position:relative;flex-shrink:0;transition:background .15s;
+  }
+  .icon-btn:hover{background:rgba(255,255,255,0.16);}
+  .badge{
+    position:absolute;top:-4px;right:-4px;background:var(--terracotta);color:#fff;
+    font-size:10.5px;font-weight:700;border-radius:999px;min-width:17px;height:17px;
+    display:flex;align-items:center;justify-content:center;padding:0 3px;
+    font-family:'Manrope',sans-serif;
+  }
+  .btn{
+    padding:10px 20px;border-radius:999px;font-weight:700;font-size:14px;
+    transition:transform .15s, box-shadow .15s;display:inline-flex;align-items:center;gap:8px;
+  }
+  .btn-primary{background:var(--terracotta);color:#fff;}
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 18px rgba(226,104,46,.35);}
+  .btn-ghost{background:transparent;color:var(--cream);border:1px solid rgba(255,255,255,0.3);}
+  .btn-ghost:hover{background:rgba(255,255,255,0.08);}
+  .cat-strip{
+    background:var(--indigo-light);overflow-x:auto;white-space:nowrap;
+    scrollbar-width:none;
+  }
+  .cat-strip::-webkit-scrollbar{display:none;}
+  .cat-strip .wrap{display:flex;gap:30px;padding:11px 28px;}
+  .cat-strip a{font-size:13.5px;font-weight:600;color:rgba(250,245,235,.78);}
+  .cat-strip a:hover{color:var(--gold);}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    background:var(--indigo);color:var(--cream);position:relative;overflow:hidden;
+    padding:64px 0 0;
+  }
+  .hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:50px;align-items:center;padding-bottom:60px;}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:18px;
+  }
+  .eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--terracotta);}
+  .hero h1{font-size:50px;line-height:1.06;color:#fff;}
+  .hero h1 em{color:var(--gold);font-style:normal;}
+  .hero p.lead{margin-top:18px;font-size:17px;color:rgba(250,245,235,.78);max-width:460px;}
+  .hero-ctas{display:flex;gap:14px;margin-top:30px;}
+  .hero-stats{display:flex;gap:34px;margin-top:46px;}
+  .hero-stats div b{display:block;font-family:'Fraunces',serif;font-size:26px;color:var(--gold);}
+  .hero-stats div span{font-size:12.5px;color:rgba(250,245,235,.65);}
+
+  /* split-payout card — signature element */
+  .payout-card{
+    background:var(--cream);color:var(--ink);border-radius:20px;padding:26px;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,.45);position:relative;
+  }
+  .payout-card .top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;}
+  .payout-card .top .label{font-size:12px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;color:var(--indigo);opacity:.6;}
+  .payout-card .top .amount{font-family:'Fraunces',serif;font-size:30px;margin-top:4px;}
+  .payout-card .pill{background:var(--green);color:#fff;font-size:11.5px;font-weight:700;padding:5px 11px;border-radius:999px;}
+  .split-bar{height:14px;border-radius:999px;overflow:hidden;display:flex;background:var(--cream-deep);}
+  .split-bar .seller{background:var(--terracotta);}
+  .split-bar .platform{background:var(--indigo);}
+  .split-legend{display:flex;justify-content:space-between;margin-top:10px;font-size:12.5px;font-weight:600;}
+  .split-legend .seller-l{color:var(--terracotta-dark);}
+  .split-legend .platform-l{color:var(--indigo);}
+  .payout-card .note{margin-top:18px;padding-top:16px;border-top:1px dashed var(--line);font-size:13px;color:#5a564c;}
+
+  /* ---------- Sections ---------- */
+  section{padding:64px 0;}
+  .section-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:30px;gap:20px;flex-wrap:wrap;}
+  .section-head h2{font-size:30px;}
+  .section-head p{color:#6b6657;font-size:14.5px;margin-top:6px;}
+  .see-all{font-size:13.5px;font-weight:700;color:var(--terracotta-dark);border-bottom:1.5px solid var(--terracotta-dark);padding-bottom:2px;}
+
+  /* category cards */
+  .cat-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;}
+  .cat-card{
+    background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+    padding:20px 14px;text-align:center;transition:transform .15s,border-color .15s;
+  }
+  .cat-card:hover{transform:translateY(-3px);border-color:var(--terracotta);}
+  .cat-card .emoji{font-size:28px;margin-bottom:10px;}
+  .cat-card span{font-size:13px;font-weight:700;}
+
+  /* product grid */
+  .prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+  .prod-card{
+    background:#fff;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);
+    display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s;
+  }
+  .prod-card:hover{transform:translateY(-4px);box-shadow:0 18px 30px -16px rgba(33,32,28,.25);}
+  .prod-img{
+    aspect-ratio:1/0.85;background:linear-gradient(135deg,var(--cream-deep),#fff);
+    display:flex;align-items:center;justify-content:center;font-size:46px;position:relative;
+  }
+  .prod-img .fav{
+    position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;
+    background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;font-size:15px;
+  }
+  .prod-img .tag{
+    position:absolute;top:10px;left:10px;background:var(--green);color:#fff;font-size:10.5px;
+    font-weight:700;padding:4px 9px;border-radius:999px;text-transform:uppercase;letter-spacing:.04em;
+  }
+  .prod-body{padding:16px;display:flex;flex-direction:column;gap:8px;flex:1;}
+  .prod-seller{font-size:11.5px;color:#8a8576;font-weight:600;}
+  .prod-title{font-size:15px;font-weight:700;line-height:1.3;}
+  .prod-rating{font-size:12.5px;color:#6b6657;}
+  .prod-rating b{color:var(--ink);}
+  .prod-price-row{display:flex;align-items:baseline;justify-content:space-between;margin-top:auto;padding-top:6px;}
+  .prod-price{font-family:'Fraunces',serif;font-size:19px;}
+  .prod-price .old{font-family:'Manrope',sans-serif;font-size:12.5px;color:#a39e8e;text-decoration:line-through;margin-left:6px;}
+  .add-btn{
+    width:36px;height:36px;border-radius:50%;background:var(--indigo);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:18px;transition:background .15s;
+  }
+  .add-btn:hover{background:var(--terracotta);}
+  .mini-split{
+    margin-top:4px;font-size:10.5px;color:#8a8576;display:flex;align-items:center;gap:5px;
+  }
+  .mini-split .dot{width:6px;height:6px;border-radius:50%;background:var(--green);}
+
+  /* trust band */
+  .trust{background:var(--cream-deep);}
+  .trust-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:30px;}
+  .trust-item{display:flex;gap:14px;align-items:flex-start;}
+  .trust-item .ic{
+    width:44px;height:44px;border-radius:10px;background:var(--indigo);color:var(--gold);
+    display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;
+  }
+  .trust-item h3{font-size:15px;margin-bottom:4px;}
+  .trust-item p{font-size:13px;color:#6b6657;margin:0;}
+
+  /* seller CTA */
+  .seller-cta{
+    background:var(--indigo);color:var(--cream);border-radius:24px;padding:54px;
+    display:flex;justify-content:space-between;align-items:center;gap:40px;position:relative;overflow:hidden;
+  }
+  .seller-cta::after{
+    content:"";position:absolute;right:-60px;top:-60px;width:240px;height:240px;border-radius:50%;
+    background:radial-gradient(circle,rgba(240,178,62,.18),transparent 70%);
+  }
+  .seller-cta h2{color:#fff;font-size:30px;max-width:430px;}
+  .seller-cta p{color:rgba(250,245,235,.75);margin-top:12px;max-width:420px;font-size:14.5px;}
+  .seller-cta .cta-side{display:flex;flex-direction:column;gap:14px;min-width:230px;}
+  .commission-chip{
+    background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:14px;
+    padding:16px 18px;
+  }
+  .commission-chip .big{font-family:'Fraunces',serif;font-size:30px;color:var(--gold);}
+  .commission-chip .sm{font-size:12px;color:rgba(250,245,235,.7);margin-top:2px;}
+
+  /* footer */
+  footer{background:var(--indigo);color:rgba(250,245,235,.7);padding:54px 0 26px;font-size:13.5px;}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;margin-bottom:36px;}
+  .foot-grid h4{color:#fff;font-size:13.5px;margin-bottom:14px;letter-spacing:.04em;text-transform:uppercase;}
+  .foot-grid ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;}
+  .foot-grid ul a:hover{color:var(--gold);}
+  .foot-bottom{
+    border-top:1px solid rgba(255,255,255,.1);padding-top:20px;display:flex;justify-content:space-between;
+    flex-wrap:wrap;gap:10px;
+  }
+
+  /* cart drawer */
+  .overlay{
+    position:fixed;inset:0;background:rgba(22,50,61,.5);opacity:0;visibility:hidden;
+    transition:opacity .25s;z-index:90;
+  }
+  .overlay.open{opacity:1;visibility:visible;}
+  .drawer{
+    position:fixed;top:0;right:0;height:100%;width:400px;background:var(--cream);
+    transform:translateX(100%);transition:transform .3s ease;z-index:91;
+    display:flex;flex-direction:column;box-shadow:-20px 0 50px rgba(0,0,0,.2);
+  }
+  .drawer.open{transform:translateX(0);}
+  .drawer-head{
+    padding:22px 24px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;
+  }
+  .drawer-head h3{font-size:19px;}
+  .drawer-items{flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:18px;}
+  .cart-item{display:flex;gap:12px;}
+  .cart-item .thumb{
+    width:56px;height:56px;border-radius:10px;background:var(--cream-deep);flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;font-size:22px;
+  }
+  .cart-item .info{flex:1;}
+  .cart-item .info .name{font-size:13.5px;font-weight:700;}
+  .cart-item .info .seller{font-size:11.5px;color:#8a8576;margin-top:2px;}
+  .cart-item .price{font-family:'Fraunces',serif;font-size:14.5px;white-space:nowrap;}
+  .drawer-foot{padding:22px 24px;border-top:1px solid var(--line);background:#fff;}
+  .drawer-foot .row{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:8px;color:#5a564c;}
+  .drawer-foot .row.total{font-size:16px;font-weight:700;color:var(--ink);margin-top:6px;}
+  .close-x{font-size:20px;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+  .close-x:hover{background:var(--cream-deep);}
+
+  @media (max-width: 1000px){
+    nav.links, .search-bar{display:none;}
+    .hero .wrap{grid-template-columns:1fr;}
+    .hero h1{font-size:38px;}
+    .cat-grid{grid-template-columns:repeat(3,1fr);}
+    .prod-grid{grid-template-columns:repeat(2,1fr);}
+    .trust-grid{grid-template-columns:repeat(2,1fr);}
+    .foot-grid{grid-template-columns:1fr 1fr;}
+    .seller-cta{flex-direction:column;text-align:center;padding:36px 24px;}
+    .seller-cta .cta-side{align-items:center;}
+    .drawer{width:100%;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav-row">
+    <a class="logo" href="#"><span class="mark">K</span>Kainx Market</a>
+    <nav class="links">
+      <a href="#categories">Categories</a>
+      <a href="#products">Marketplace</a>
+      <a href="#sell">Sell on Kainx</a>
+      <a href="#trust">Buyer protection</a>
+    </nav>
+    <div class="nav-actions">
+      <div class="search-bar">
+        <span>🔍</span>
+        <input type="text" placeholder="Search products, sellers, categories…">
+      </div>
+      <button class="icon-btn" aria-label="Account">👤</button>
+      <button class="icon-btn" id="cartBtn" aria-label="Cart">
+        🛒<span class="badge" id="cartCount">3</span>
+      </button>
+      <a class="btn btn-primary" href="#sell">Start selling</a>
+    </div>
+  </div>
+  <div class="cat-strip">
+    <div class="wrap">
+      <a href="#">Phones &amp; Electronics</a>
+      <a href="#">Fashion</a>
+      <a href="#">Home &amp; Living</a>
+      <a href="#">Beauty</a>
+      <a href="#">Groceries</a>
+      <a href="#">Crafts &amp; Art</a>
+      <a href="#">Auto Parts</a>
+      <a href="#">Baby &amp; Kids</a>
+      <a href="#">Flash deals 🔥</a>
+    </div>
+  </div>
+</header>
+
+<div class="weave"></div>
+
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">Verified sellers · Secure escrow</div>
+      <h1>Trade with trust, <em>built for Africa.</em></h1>
+      <p class="lead">Kainx Market connects buyers and sellers across the continent — with secure payments, tracked delivery, and a transparent 10% commission so every seller knows exactly what they keep.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#products">Browse the market</a>
+        <a class="btn btn-ghost" href="#sell">Become a seller</a>
+      </div>
+      <div class="hero-stats">
+        <div><b>42,000+</b><span>Active sellers</span></div>
+        <div><b>1.8M</b><span>Orders delivered</span></div>
+        <div><b>4.7★</b><span>Average buyer rating</span></div>
+      </div>
+    </div>
+
+    <div class="payout-card">
+      <div class="top">
+        <div>
+          <div class="label">Sample order payout</div>
+          <div class="amount">₦45,000</div>
+        </div>
+        <span class="pill">Order completed</span>
+      </div>
+      <div class="split-bar">
+        <div class="seller" style="width:90%"></div>
+        <div class="platform" style="width:10%"></div>
+      </div>
+      <div class="split-legend">
+        <span class="seller-l">● Seller receives ₦40,500</span>
+        <span class="platform-l">● Kainx fee ₦4,500</span>
+      </div>
+      <p class="note">Every sale automatically deducts a flat 10% commission at settlement — visible to sellers before they ever list a product. Refunds adjust the split instantly.</p>
+    </div>
+  </div>
+</section>
+
+<section id="categories">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2>Shop by category</h2>
+        <p>Curated departments from sellers across the region</p>
+      </div>
+      <a class="see-all" href="#">View all categories</a>
+    </div>
+    <div class="cat-grid">
+      <a class="cat-card" href="#"><div class="emoji">📱</div><span>Electronics</span></a>
+      <a class="cat-card" href="#"><div class="emoji">👗</div><span>Fashion</span></a>
+      <a class="cat-card" href="#"><div class="emoji">🏠</div><span>Home &amp; Living</span></a>
+      <a class="cat-card" href="#"><div class="emoji">💄</div><span>Beauty</span></a>
+      <a class="cat-card" href="#"><div class="emoji">🥬</div><span>Groceries</span></a>
+      <a class="cat-card" href="#"><div class="emoji">🧶</div><span>Crafts &amp; Art</span></a>
+    </div>
+  </div>
+</section>
+
+<section id="products">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2>Trending right now</h2>
+        <p>Top-rated listings from verified sellers</p>
+      </div>
+      <a class="see-all" href="#">View marketplace</a>
+    </div>
+    <div class="prod-grid" id="productGrid"></div>
+  </div>
+</section>
+
+<section class="trust" id="trust">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2>Built so trades go right</h2>
+        <p>Security and fairness baked into every order</p>
+      </div>
+    </div>
+    <div class="trust-grid">
+      <div class="trust-item">
+        <div class="ic">🔒</div>
+        <div><h3>Escrow-backed payments</h3><p>Funds release to sellers only after delivery is confirmed.</p></div>
+      </div>
+      <div class="trust-item">
+        <div class="ic">🚚</div>
+        <div><h3>Tracked logistics</h3><p>Real-time tracking and proof of delivery on every order.</p></div>
+      </div>
+      <div class="trust-item">
+        <div class="ic">🛡️</div>
+        <div><h3>Fraud &amp; fake-review detection</h3><p>AI models flag suspicious listings and reviews before they reach you.</p></div>
+      </div>
+      <div class="trust-item">
+        <div class="ic">↩️</div>
+        <div><h3>Easy refunds &amp; disputes</h3><p>Clear, fast resolution if an order doesn't go as planned.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="sell">
+  <div class="wrap">
+    <div class="seller-cta">
+      <div>
+        <h2>Open your stall on Kainx Market.</h2>
+        <p>List products in minutes, reach buyers nationwide, and get paid out automatically — we only ever keep 10%, with nothing hidden.</p>
+        <div class="hero-ctas" style="margin-top:24px;">
+          <a class="btn btn-primary" href="#">Create a seller account</a>
+          <a class="btn btn-ghost" href="#">See seller tools</a>
+        </div>
+      </div>
+      <div class="cta-side">
+        <div class="commission-chip">
+          <div class="big">10%</div>
+          <div class="sm">Flat commission. No listing fees, no surprises.</div>
+        </div>
+        <div class="commission-chip">
+          <div class="big">24–48h</div>
+          <div class="sm">Average payout time after delivery confirmation.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="logo" href="#" style="color:#fff;"><span class="mark">K</span>Kainx Market</a>
+        <p style="margin-top:14px;max-width:280px;color:rgba(250,245,235,.65);">A trusted marketplace connecting buyers and sellers across Africa — secure payments, tracked delivery, fair commission.</p>
+      </div>
+      <div>
+        <h4>Marketplace</h4>
+        <ul><li><a href="#">Categories</a></li><li><a href="#">Flash deals</a></li><li><a href="#">Top sellers</a></li><li><a href="#">Gift cards</a></li></ul>
+      </div>
+      <div>
+        <h4>Selling</h4>
+        <ul><li><a href="#">Start selling</a></li><li><a href="#">Seller dashboard</a></li><li><a href="#">Commission &amp; payouts</a></li><li><a href="#">Seller support</a></li></ul>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <ul><li><a href="#">Help center</a></li><li><a href="#">Track an order</a></li><li><a href="#">Refunds &amp; disputes</a></li><li><a href="#">Contact us</a></li></ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Kainx Market. All rights reserved.</span>
+      <span>Secured with bank-grade encryption · PCI-DSS compliant</span>
+    </div>
+  </div>
+</footer>
+
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h3>Your cart</h3>
+    <button class="close-x" id="closeDrawer">✕</button>
+  </div>
+  <div class="drawer-items" id="drawerItems"></div>
+  <div class="drawer-foot">
+    <div class="row"><span>Subtotal</span><span id="subtotal">₦0</span></div>
+    <div class="row"><span>Delivery</span><span>₦1,500</span></div>
+    <div class="row total"><span>Total</span><span id="total">₦0</span></div>
+    <a class="btn btn-primary" href="#" style="width:100%;justify-content:center;margin-top:16px;">Checkout securely</a>
+  </div>
+</aside>
+
+<script>
+  const products = [
+    {emoji:"👟", tag:"Best seller", title:"Men's Canvas Sneakers, size 38–45", seller:"UrbanStep Lagos", rating:4.8, reviews:312, price:18500, old:24000},
+    {emoji:"📱", tag:null, title:"Refurbished Smartphone 128GB Dual SIM", seller:"TechBay Accra", rating:4.6, reviews:198, price:96000, old:null},
+    {emoji:"🧺", tag:"New", title:"Handwoven Storage Basket Set (3pc)", seller:"Kente & Craft Co.", rating:4.9, reviews:87, price:12200, old:null},
+    {emoji:"💧", tag:null, title:"Shea Butter Face & Body Cream 250ml", seller:"Pure Roots Beauty", rating:4.7, reviews:421, price:4300, old:5400},
+    {emoji:"🎧", tag:"Flash deal", title:"Wireless Over-Ear Headphones", seller:"SoundHub Nairobi", rating:4.5, reviews:156, price:21500, old:29900},
+    {emoji:"👜", tag:null, title:"Ankara Print Tote Bag, lined", seller:"Adire Studio", rating:4.8, reviews:64, price:9800, old:null},
+    {emoji:"🍯", tag:null, title:"Raw Forest Honey 500g, 6-pack", seller:"Highland Apiary", rating:4.9, reviews:233, price:14400, old:null},
+    {emoji:"⌚", tag:"Best seller", title:"Smartwatch with Heart Rate Monitor", seller:"GadgetWorld", rating:4.4, reviews:502, price:34000, old:42000},
+  ];
+
+  const fmt = n => "₦" + n.toLocaleString("en-NG");
+
+  const grid = document.getElementById("productGrid");
+  products.forEach((p, i) => {
+    const sellerCut = Math.round(p.price * 0.9);
+    const card = document.createElement("div");
+    card.className = "prod-card";
+    card.innerHTML = `
+      <div class="prod-img">
+        ${p.tag ? `<span class="tag">${p.tag}</span>` : ""}
+        <span class="fav">♡</span>
+        <span>${p.emoji}</span>
+      </div>
+      <div class="prod-body">
+        <span class="prod-seller">${p.seller}</span>
+        <span class="prod-title">${p.title}</span>
+        <span class="prod-rating">★ <b>${p.rating}</b> (${p.reviews})</span>
+        <div class="mini-split"><span class="dot"></span> Seller keeps ${fmt(sellerCut)} of this sale</div>
+        <div class="prod-price-row">
+          <span class="prod-price">${fmt(p.price)}${p.old ? `<span class="old">${fmt(p.old)}</span>` : ""}</span>
+          <button class="add-btn" data-idx="${i}" aria-label="Add to cart">+</button>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  // Cart logic
+  let cart = [products[0], products[3], products[5]];
+  const cartCount = document.getElementById("cartCount");
+  const drawerItems = document.getElementById("drawerItems");
+  const subtotalEl = document.getElementById("subtotal");
+  const totalEl = document.getElementById("total");
+  const DELIVERY = 1500;
+
+  function renderCart(){
+    cartCount.textContent = cart.length;
+    drawerItems.innerHTML = cart.length ? "" : `<p style="color:#8a8576;font-size:14px;">Your cart is empty. Start adding products you love.</p>`;
+    let subtotal = 0;
+    cart.forEach(p => {
+      subtotal += p.price;
+      const row = document.createElement("div");
+      row.className = "cart-item";
+      row.innerHTML = `
+        <div class="thumb">${p.emoji}</div>
+        <div class="info">
+          <div class="name">${p.title}</div>
+          <div class="seller">${p.seller}</div>
+        </div>
+        <div class="price">${fmt(p.price)}</div>
+      `;
+      drawerItems.appendChild(row);
+    });
+    subtotalEl.textContent = fmt(subtotal);
+    totalEl.textContent = fmt(subtotal + (cart.length ? DELIVERY : 0));
+  }
+  renderCart();
+
+  grid.addEventListener("click", e => {
+    const btn = e.target.closest(".add-btn");
+    if(!btn) return;
+    cart.push(products[+btn.dataset.idx]);
+    renderCart();
+    openDrawer();
+  });
+
+  const drawer = document.getElementById("drawer");
+  const overlay = document.getElementById("overlay");
+  function openDrawer(){ drawer.classList.add("open"); overlay.classList.add("open"); }
+  function closeDrawer(){ drawer.classList.remove("open"); overlay.classList.remove("open"); }
+  document.getElementById("cartBtn").addEventListener("click", openDrawer);
+  document.getElementById("closeDrawer").addEventListener("click", closeDrawer);
+  overlay.addEventListener("click", closeDrawer);
+</script>
+
+</body>
+</html>
